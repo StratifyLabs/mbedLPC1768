@@ -21,7 +21,9 @@ This is the board support package for the MBED LPC1768 board.  Here is a quick g
 
 ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/mbedLPC1768-USBConnections.JPG "mbed LPC1768 USB Connections")
 
-- Finally, use Stratify Link to program the OS as shown below ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/stratifyOS-program.png "Install Stratify OS")
+- Finally, use Stratify Link to program the OS as shown below 
+
+![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/stratifyOS-program.png "Install Stratify OS")
 
 Once the bootloader and OS are installed, you can proceed to install and run applications (without going through the above process a second time).
 
