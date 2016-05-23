@@ -8,14 +8,20 @@ If you have any questions, please create an issueon Github.  I will answer them 
 
 This is the board support package for the MBED LPC1768 board.  Here is a quick guide to getting started:
 
-1.  Download the Stratify Labs SDK (Eclipse, gcc compiler, and Stratify Link) from:  http://stratifylabs.co/download/
-1.  Make sure your SDK is up to date with the latest build (link to guide coming soon)
-1.  Download the zip file of this project (or fork the project, your choice)
-4.  Import the project into your Eclipse workspace (if you are new to that, follow this guide: http://agile.csc.ncsu.edu/SEMaterials/tutorials/import_export/)
-5.  Build the bootloader and the OS in Eclipse ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/build-options.png "Build Options")
-5.  Connect a mini-B USB cable to the MBED and drop the bootloader file (mbedLPC1768/build_release_usb_boot/mbedLPC1768.bin) in the MBED mounted drive then press the MBED reset button (you should see one of the 4 blue leds flash a few times whent the bootloader starts)
-6.  Now connect the LPC1768 USB port directly to your computer using the image below ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/mbedLPC1768-USBConnections.JPG "mbed LPC1768 USB Connections")
-7.  Finally, use Stratify Link to program the OS as shown below ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/stratifyOS-program.png "Install Stratify OS")
+- Download the Stratify Labs SDK (Eclipse, gcc compiler, and Stratify Link) from:  http://stratifylabs.co/download/
+- Make sure your SDK is up to date with the latest build (link to guide coming soon)
+- Download the zip file of this project (or fork the project, your choice)
+- Import the project into your Eclipse workspace (if you are new to that, follow this guide: http://agile.csc.ncsu.edu/SEMaterials/tutorials/import_export/)
+- Build the bootloader and the OS in Eclipse
+
+![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/build-options.png "Build Options")
+
+- Connect a mini-B USB cable to the MBED and drop the bootloader file (mbedLPC1768/build_release_usb_boot/mbedLPC1768.bin) in the MBED mounted drive then press the MBED reset button (you should see one of the 4 blue leds flash a few times whent the bootloader starts)
+- Now connect the LPC1768 USB port directly to your computer using the image below 
+
+![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/mbedLPC1768-USBConnections.JPG "mbed LPC1768 USB Connections")
+
+- Finally, use Stratify Link to program the OS as shown below ![Preview](https://github.com/StratifyLabs/mbedLPC1768/blob/master/doc/stratifyOS-program.png "Install Stratify OS")
 
 Once the bootloader and OS are installed, you can proceed to install and run applications (without going through the above process a second time).
 
