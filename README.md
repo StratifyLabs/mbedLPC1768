@@ -1,5 +1,7 @@
 # mbedLPC1768
 
+For more information about licensing, see here: http://stratifylabs.co/download/
+
 ## Support
 
 If you have any questions, please create an issueon Github.  I will answer them as soon as I can.
