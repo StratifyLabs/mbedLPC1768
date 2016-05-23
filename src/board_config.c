@@ -19,6 +19,7 @@ limitations under the License.
 #include <sys/lock.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <mcu/mcu.h>
 #include <mcu/device.h>
 #include <iface/device_config.h>
 #include <device/microchip/sst25vf.h>
@@ -45,6 +46,7 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
+		.flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 		.led.port = 1, .led.pin = 18
 };
 
@@ -116,15 +118,6 @@ const uartfifo_cfg_t uart3_fifo_cfg = UARTFIFO_DEVICE_CFG(3,
 		uart3_fifo_buffer,
 		UART3_DEVFIFO_BUFFER_SIZE);
 uartfifo_state_t uart3_fifo_state MCU_SYS_MEM;
-
-#define USB0_DEVFIFO_BUFFER_SIZE 64
-char usb0_fifo_buffer[USB0_DEVFIFO_BUFFER_SIZE] MCU_SYS_MEM;
-const usbfifo_cfg_t usb0_fifo_cfg = USBFIFO_DEVICE_CFG(0,
-		LINK_USBPHY_BULK_ENDPOINT,
-		LINK_USBPHY_BULK_ENDPOINT_SIZE,
-		usb0_fifo_buffer,
-		USB0_DEVFIFO_BUFFER_SIZE);
-usbfifo_state_t usb0_fifo_state MCU_SYS_MEM;
 
 #define STDIO_BUFFER_SIZE 128
 
@@ -201,7 +194,7 @@ const device_t devices[] = {
 #endif
 
 		//system devices
-		USBFIFO_DEVICE("link-phy-usb", &usb0_fifo_cfg, &usb0_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
+		USBFIFO_DEVICE("link-phy-usb", &stratify_link_transport_usb_fifo_cfg, &stratify_link_transport_usb_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		SYS_DEVICE,
 		DEVICE_TERMINATOR
