@@ -42,6 +42,6 @@ const bootloader_board_config_t boot_board_config = {
 
 extern void boot_main();
 
-void _main(void){
+void _main(){
 	boot_main();
 }

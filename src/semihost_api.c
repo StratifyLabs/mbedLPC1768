@@ -110,7 +110,7 @@ int semihost_rename(const char *old_name, const char *new_name) {
 }
 #endif
 
-int semihost_exit(void) {
+int semihost_exit() {
     uint32_t args[4];
     return __semihost(SYS_EXIT, args);
 }
@@ -122,23 +122,23 @@ int semihost_uid(char *uid) {
     return __semihost(USR_UID, &args);
 }
 
-int semihost_reset(void) {
+int semihost_reset() {
     // Does not normally return, however if used with older firmware versions
     // that do not support this call it will return -1.
     return __semihost(USR_RESET, NULL);
 }
 
-int semihost_vbus(void) {
+int semihost_vbus() {
     return __semihost(USR_VBUS, NULL);
 }
 
-int semihost_powerdown(void) {
+int semihost_powerdown() {
     return __semihost(USR_POWERDOWN, NULL);
 }
 
 #if DEVICE_DEBUG_AWARENESS
 
-int semihost_connected(void) {
+int semihost_connected() {
     return (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) ? 1 : 0;
 }
 
@@ -146,12 +146,12 @@ int semihost_connected(void) {
 // These processors cannot know if the interface is connect, assume so:
 static int is_debugger_attached = 1;
 
-int semihost_connected(void) {
+int semihost_connected() {
     return is_debugger_attached;
 }
 #endif
 
-int semihost_disabledebug(void) {
+int semihost_disabledebug() {
 #if !(DEVICE_DEBUG_AWARENESS)
     is_debugger_attached = 0;
 #endif

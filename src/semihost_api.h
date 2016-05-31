@@ -78,13 +78,13 @@ int semihost_rename(const char *old_name, const char *new_name);
 #endif
 
 int semihost_uid(char *uid);
-int semihost_reset(void);
-int semihost_vbus(void);
-int semihost_powerdown(void);
-int semihost_exit(void);
+int semihost_reset();
+int semihost_vbus();
+int semihost_powerdown();
+int semihost_exit();
 
-int semihost_connected(void);
-int semihost_disabledebug(void);
+int semihost_connected();
+int semihost_disabledebug();
 
 #endif
 

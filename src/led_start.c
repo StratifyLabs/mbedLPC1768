@@ -48,7 +48,7 @@ void led_flash(u32 mask, u32 period){
 	led_on(mask); usleep(period); led_off(mask);
 }
 
-void led_start(void){
+void led_start(){
 	led_flash(1<<18, 50000);
 	led_flash(1<<20, 100000);
 	led_flash(1<<21, 150000);

@@ -41,21 +41,34 @@ limitations under the License.
 #define STFY_SYSTEM_OSC 12000000
 #define STFY_SYSTEM_MEMORY_SIZE (8192*2)
 
+static void board_event_handler(int event, void * args);
+
 const mcu_board_config_t mcu_board_config = {
 		.core_osc_freq = STFY_SYSTEM_OSC,
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
 		.flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
+		.event = board_event_handler,
 		.led.port = 1, .led.pin = 18
 };
 
+void board_event_handler(int event, void * args){
+	switch(event){
+	case MCU_BOARD_CONFIG_EVENT_PRIV_ERROR:
+		stratify_led_priv_error(0);
+		break;
+	case MCU_BOARD_CONFIG_EVENT_START_LINK:
+		stratify_led_startup(); //this could be a new routine to mix things up
+		break;
+	}
+}
+
 #define SCHED_TASK_TOTAL 10
 
-const stfy_board_config_t stfy_board_config = {
+const stratify_board_config_t stratify_board_config = {
 		.clk_usecond_tmr = 3,
 		.task_total = SCHED_TASK_TOTAL,
-		.resd = 0,
 		.clk_usec_mult = (uint32_t)(STFY_SYSTEM_CLOCK / 1000000),
 		.clk_nsec_div = (uint32_t)((uint64_t)1024 * 1000000000 / STFY_SYSTEM_CLOCK),
 #ifdef __STDIO_VCP
@@ -72,16 +85,19 @@ const stfy_board_config_t stfy_board_config = {
 		.sys_name = "mbedLPC1768",
 		.sys_version = "1.0.0",
 		.sys_memory_size = STFY_SYSTEM_MEMORY_SIZE,
+		.start = stratify_default_thread,
 #if defined __USB
-		.link_transport = &link_transport_usb
+		.start_args = &link_transport_usb,
 #elif defined __UART
-		.link_transport = &link_transport_usb
+		.start_args = &link_transport_usb,
 #endif
+		.start_stack_size = STRATIFY_DEFAULT_START_STACK_SIZE
+
 
 };
 
-volatile sched_task_t stfy_sched_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
-task_t stfy_task_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
+volatile sched_task_t stratify_sched_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
+task_t stratify_task_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
 
 
 #define USER_ROOT 0

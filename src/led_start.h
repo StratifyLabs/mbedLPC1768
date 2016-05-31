@@ -19,7 +19,7 @@ limitations under the License.
 #define LED_START_H_
 
 
-void led_start(void);
+void led_start();
 
 
 #endif /* LED_START_H_ */
