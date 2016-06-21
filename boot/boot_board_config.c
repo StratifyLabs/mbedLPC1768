@@ -24,8 +24,9 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
-		.flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
-		.led.port = 1, .led.pin = 18
+		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
+		.led.port = 1, .led.pin = 18,
+		.event = 0
 };
 
 const bootloader_board_config_t boot_board_config = {
@@ -36,7 +37,6 @@ const bootloader_board_config_t boot_board_config = {
 		.flags = 0,
 		.link_transport_driver = &link_transport,
 		.id = 2,
-		.event = 0
 };
 
 
