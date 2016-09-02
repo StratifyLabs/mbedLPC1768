@@ -81,7 +81,7 @@ const stratify_board_config_t stratify_board_config = {
 		.stdin_dev = "/dev/stdio-in" ,
 		.stdout_dev = "/dev/stdio-out",
 		.stderr_dev = "/dev/stdio-out",
-		.sys_flags = SYS_FLAGS_STDIO_FIFO,
+		.o_sys_flags = SYS_FLAGS_STDIO_FIFO,
 #endif
 		.sys_name = "mbedLPC1768",
 		.sys_version = "1.0.0",
