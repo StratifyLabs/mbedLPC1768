@@ -28,6 +28,8 @@ link_transport_driver_t link_transport_usb = {
 #define USBDEV_CONNECT_PORT "/dev/pio2"
 #define USBDEV_CONNECT_PINMASK (1<<9)
 
+static usb_dev_context_t m_usb_context;
+
 link_transport_phy_t link_transport_open(const char * name, int baudrate){
 	pio_attr_t attr;
 	link_transport_phy_t fd;
@@ -43,7 +45,9 @@ link_transport_phy_t link_transport_open(const char * name, int baudrate){
 	attr.mode = PIO_MODE_OUTPUT | PIO_MODE_DIRONLY;
 	ioctl(fd_pio, I_PIO_SETATTR, &attr);
 
-	fd = stratify_link_transport_usb_open(name, baudrate);
+	memset(&m_usb_context, 0, sizeof(m_usb_context));
+	m_usb_context.constants = &stratify_link_transport_usb_constants;
+	fd = stratify_link_transport_usb_open(name, &m_usb_context);
 
 	ioctl(fd_pio, I_PIO_CLRMASK, (void*)attr.mask);
 	close(fd_pio);

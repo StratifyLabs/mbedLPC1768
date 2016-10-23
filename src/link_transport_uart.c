@@ -30,7 +30,7 @@ limitations under the License.
 #include <mcu/debug.h>
 #include <stratify/usb_dev_typedefs.h>
 #include <stratify/usb_dev_defs.h>
-#include <device/sys.h>
+#include <dev/sys.h>
 
 #include "link_transport_uart.h"
 

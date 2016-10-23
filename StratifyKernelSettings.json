@@ -1,6 +1,7 @@
 {
+    "IsInstallKernelData": false,
     "IsKernelFormatHome": false,
-    "IsKernelInstallApps": false,
+    "IsKernelRunTests": false,
     "IsKernelVerify": false,
     "KernelBootSuffix": "_boot",
     "KernelBuild": "build_release_usb",
