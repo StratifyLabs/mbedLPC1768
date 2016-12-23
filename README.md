@@ -4,7 +4,7 @@ For more information about licensing, see here: http://stratifylabs.co/download/
 
 ## Support
 
-If you have any questions, please create an issueon Github.  I will answer them as soon as I can.
+If you have any questions, please create an issue on Github.  I will answer them as soon as I can.
 
 ## Getting Started
 
