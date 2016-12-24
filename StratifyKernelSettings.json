@@ -1,9 +1,18 @@
 {
-    "IsInstallKernelData": false,
-    "IsKernelFormatHome": false,
-    "IsKernelRunTests": false,
-    "IsKernelVerify": false,
-    "KernelBootSuffix": "_boot",
-    "KernelBuild": "build_release_usb",
-    "KernelBuildPrefix": "build_"
+    "LocalBuild": "build_release_usb",
+    "LocalIsFormatHome": false,
+    "LocalIsInstallData": false,
+    "LocalIsRunTests": false,
+    "LocalIsVerify": false,
+    "LocalProjectId": "-KZTKpwml73OFt90YdD8",
+    "bootsuffix": "_boot",
+    "buildprefix": "build_",
+    "description": "The MBED LPC1768 is an mbed compatible board",
+    "github": "https://github.com/StratifyLabs/mbedLPC1768",
+    "hardwareid": "0x00000002",
+    "name": "mbedLPC1768",
+    "publisher": "Stratify Labs, Inc",
+    "tags": "mbed,nxp,lpc,lpc17xx,lpc1769,arm,cortex-m3",
+    "type": "StratifyKernel",
+    "version": "1.0"
 }

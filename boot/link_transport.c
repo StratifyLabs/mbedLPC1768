@@ -40,7 +40,7 @@ link_transport_phy_t link_transport_open(const char * name, int baudrate){
 	mcu_pio_setattr(USBDEV_CONNECT_PORT, &attr);
 
 	memset(&m_usb_context, 0, sizeof(m_usb_context));
-	m_usb_context.constants = &stratify_link_boot_transport_usb_constants;
+	m_usb_context.constants = &stratify_link_transport_usb_constants;
 
 	fd = stratify_link_boot_transport_usb_open(name, &m_usb_context);
 
