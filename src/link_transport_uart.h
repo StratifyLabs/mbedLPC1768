@@ -26,7 +26,7 @@ extern link_transport_driver_t link_transport_usb;
 link_transport_phy_t link_transport_uart_open(const char * name, int);
 int link_transport_uart_read(link_transport_phy_t, void * buf, int nbyte);
 int link_transport_uart_write(link_transport_phy_t, const void * buf, int nbyte);
-int link_transport_uart_close(link_transport_phy_t handle);
+int link_transport_uart_close(link_transport_phy_t * handle);
 void link_transport_uart_wait(int msec);
 void link_transport_uart_flush(link_transport_phy_t handle);
 

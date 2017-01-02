@@ -37,3 +37,8 @@ The MBED semihost filesystem API (for accessing "/home") is limited.  You can ac
 ### UART Transport Layer
 
 At one time, you could run the Stratify Link transport layer over the UART using the standard USB connection.  Changes to the MBED firmware have prevented this from working.  The MBED resets the target whenever the virtual COM port is closed.  This causes problems.  So for now, you have to directly connect to the LPC1768 USB port.  This works much faster and better than the UART anyway.
+
+### Changelog
+
+v1.1: Updated UART transport close function to eliminate a build warning
+v1.0: Initial Stable release

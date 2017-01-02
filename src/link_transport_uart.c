@@ -83,8 +83,10 @@ int link_transport_uart_read(link_transport_phy_t handle, void * buf, int nbyte)
 	return ret;
 }
 
-int link_transport_uart_close(link_transport_phy_t handle){
-	return close(handle);
+int link_transport_uart_close(link_transport_phy_t * handle){
+	link_transport_phy_t fd = *handle;
+	*handle = -1;
+	return close(fd);
 }
 
 void link_transport_uart_wait(int msec){
