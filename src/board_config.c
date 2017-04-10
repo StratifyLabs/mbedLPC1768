@@ -79,6 +79,7 @@ const stratify_board_config_t stratify_board_config = {
 		.o_sys_flags = SYS_FLAGS_STDIO_FIFO | SYS_FLAGS_NOTIFY,
 		.sys_name = "mbedLPC1768",
 		.sys_version = "1.0",
+		.sys_id = "-KZTKpwml73OFt90YdD8",
 		.sys_memory_size = STFY_SYSTEM_MEMORY_SIZE,
 		.start = stratify_default_thread,
 #if defined __USB
