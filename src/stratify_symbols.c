@@ -16,9 +16,9 @@ limitations under the License.
 
 */
 
-#include <stratify/symbols.h>
+#include <sos/symbols.h>
 
 #define SYMBOLS_IGNORE_SON 1
 #define SYMBOLS_IGNORE_SG 1
 
-#include <stratify/symbols_table.h>
+#include <sos/symbols/table.h>

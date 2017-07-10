@@ -21,7 +21,7 @@ limitations under the License.
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <stratify/sysfs.h>
+#include <sos/fs/sysfs.h>
 
 
 typedef struct {
@@ -61,7 +61,7 @@ void localfs_unlock(const void * cfg);
 
 int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 
-#define LOCALFS(mount_loc_name, cfgp, access_mode) { \
+#define LOCALFS_MOUNT(mount_loc_name, cfgp, access_mode) { \
 		.mount_path = mount_loc_name, \
 		.access = access_mode, \
 		.mount = localfs_init, \
@@ -70,12 +70,12 @@ int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 		.startup = SYSFS_NOTSUP, \
 		.mkfs = localfs_mkfs, \
 		.open = localfs_open, \
-		.priv_read = NULL, \
-		.priv_write = NULL, \
+		.read_async = NULL, \
+		.write_async = NULL, \
 		.read = localfs_read, \
 		.write = localfs_write, \
 		.close = localfs_close, \
-		.priv_ioctl = SYSFS_NOTSUP, \
+		.ioctl = SYSFS_NOTSUP, \
 		.rename = localfs_rename, \
 		.unlink = localfs_unlink, \
 		.mkdir = SYSFS_NOTSUP, \

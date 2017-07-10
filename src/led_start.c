@@ -26,18 +26,18 @@ limitations under the License.
 void priv_led_on(void * args){
 	uint32_t * pinmask = (uint32_t *)args;
 	pio_attr_t attr;
-	attr.mask = (*pinmask);
-	attr.mode = PIO_MODE_OUTPUT;
+	attr.o_pinmask = (*pinmask);
+	attr.o_flags = PIO_FLAG_SET_OUTPUT;
 	mcu_pio_setattr(1, &attr);
-	mcu_pio_setmask(1, (void*)(attr.mask));
+	mcu_pio_setmask(1, (void*)(attr.o_pinmask));
 }
 
 void priv_led_off(void * args){
 	uint32_t * pinmask = (uint32_t *)args;
 	pio_attr_t attr;
-	attr.mask = (*pinmask);
-	mcu_pio_clrmask(1, (void*)(attr.mask));
-	attr.mode = PIO_MODE_INPUT;
+	attr.o_pinmask = (*pinmask);
+	mcu_pio_clrmask(1, (void*)(attr.o_pinmask));
+	attr.o_flags = PIO_FLAG_SET_INPUT;
 	mcu_pio_setattr(1, &attr);
 }
 

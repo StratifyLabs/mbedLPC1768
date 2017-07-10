@@ -20,18 +20,19 @@ limitations under the License.
 #include <fcntl.h>
 #include <errno.h>
 #include <mcu/mcu.h>
-#include <mcu/device.h>
-#include <iface/device_config.h>
-#include <dev/microchip/sst25vf.h>
-#include <dev/microchip/enc28j60.h>
-#include <dev/sys.h>
-#include <dev/uartfifo.h>
-#include <dev/usbfifo.h>
-#include <dev/fifo.h>
-#include <iface/link.h>
-#include <stratify/sysfs.h>
-#include <stratify/stratify.h>
-#include <dev/sys.h>
+#include <mcu/periph.h>
+#include <mcu/microchip/sst25vf.h>
+#include <mcu/sys.h>
+#include <mcu/uartfifo.h>
+#include <mcu/usbfifo.h>
+#include <mcu/fifo.h>
+#include <mcu/core.h>
+#include <mcu/sys.h>
+#include <sos/link.h>
+#include <sos/fs/sysfs.h>
+#include <sos/fs/appfs.h>
+#include <sos/fs/devfs.h>
+#include <sos/stratify.h>
 
 #include "localfs.h"
 #include "link_transport_usb.h"
@@ -48,17 +49,22 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
-		.usb_pin_assign = 0,
+		.usb_pin_assignment[0] = {0, 29},
+		.usb_pin_assignment[1] = {0, 30},
+		.usb_pin_assignment[2] = {0xff, 0xff},
+		.usb_pin_assignment[3] = {0xff, 0xff},
 		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 		.event = board_event_handler,
 		.led.port = 1, .led.pin = 18
 };
 
 void board_event_handler(int event, void * args){
+	core_attr_t attr;
 	switch(event){
 	case MCU_BOARD_CONFIG_EVENT_PRIV_FATAL:
 		//start the bootloader on a fatal event
-		mcu_core_invokebootloader(0, 0);
+		attr.o_flags = CORE_FLAG_EXEC_INVOKE_BOOTLOADER;
+		mcu_core_setattr(0, &attr);
 		break;
 	case MCU_BOARD_CONFIG_EVENT_START_LINK:
 		stratify_led_startup();
@@ -99,16 +105,6 @@ task_t stratify_task_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
 #define USER_ROOT 0
 #define GROUP_ROOT 0
 
-
-/* This is the state information for the sst25vf flash IC driver.
- *
- */
-sst25vf_state_t sst25vf_state MCU_SYS_MEM;
-
-/* This is the configuration specific structure for the sst25vf
- * flash IC driver.
- */
-const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(-1, 0, -1, 0, 0, 17, 1*1024*1024);
 
 #define UART0_DEVFIFO_BUFFER_SIZE 128
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
@@ -159,61 +155,60 @@ fifo_state_t stdio_in_state = {
  * automatically.  By default, the peripheral devices for the MCU are available
  * plus the devices on the microcomputer.
  */
-const device_t devices[] = {
+const devfs_device_t devices[] = {
 		//mcu peripherals
-		DEVICE_PERIPH("mem0", mcu_mem, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFBLK),
-		DEVICE_PERIPH("core", mcu_core, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("core0", mcu_core, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("adc0", mcu_adc, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("dac0", mcu_dac, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("eint0", mcu_eint, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("eint1", mcu_eint, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("eint2", mcu_eint, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("eint3", mcu_eint, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pio0", mcu_pio, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pio1", mcu_pio, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pio2", mcu_pio, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pio3", mcu_pio, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pio4", mcu_pio, 4, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("i2c0", mcu_i2c, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("i2c1", mcu_i2c, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("i2c2", mcu_i2c, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("pwm1", mcu_pwm, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFBLK),
-		DEVICE_PERIPH("qei0", mcu_qei, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("rtc", mcu_rtc, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		//DEVICE_PERIPH("spi0", mcu_ssp, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		//DEVICE_PERIPH("spi1", mcu_ssp, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("spi2", mcu_spi, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("tmr0", mcu_tmr, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("tmr1", mcu_tmr, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("tmr2", mcu_tmr, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		UARTFIFO_DEVICE("uart0", &uart0_fifo_cfg, &uart0_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
-		//DEVICE_PERIPH("uart0", mcu_uart, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		UARTFIFO_DEVICE("uart1", &uart1_fifo_cfg, &uart1_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
-		//DEVICE_PERIPH("uart1", mcu_uart, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("uart2", mcu_uart, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
-		DEVICE_PERIPH("usb0", mcu_usb, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
+		DEVFS_HANDLE("mem0", mcu_mem, 0, 0, 0666, USER_ROOT, S_IFBLK),
+		DEVFS_HANDLE("core", mcu_core, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("core0", mcu_core, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("adc0", mcu_adc, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("dac0", mcu_dac, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("eint0", mcu_eint, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("eint1", mcu_eint, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("eint2", mcu_eint, 2, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("eint3", mcu_eint, 3, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pio0", mcu_pio, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pio1", mcu_pio, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pio2", mcu_pio, 2, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pio3", mcu_pio, 3, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pio4", mcu_pio, 4, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("i2c0", mcu_i2c, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("i2c1", mcu_i2c, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("i2c2", mcu_i2c, 2, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("pwm1", mcu_pwm, 1, 0, 0666, USER_ROOT, S_IFBLK),
+		DEVFS_HANDLE("qei0", mcu_qei, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("rtc", mcu_rtc, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		//DEVFS_HANDLE("spi0", mcu_ssp, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		//DEVFS_HANDLE("spi1", mcu_ssp, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("spi2", mcu_spi, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("tmr0", mcu_tmr, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("tmr1", mcu_tmr, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("tmr2", mcu_tmr, 2, 0, 0666, USER_ROOT, S_IFCHR),
+		//UARTFIFO_DEVICE("uart0", &uart0_fifo_cfg, &uart0_fifo_state, 0, 0666, USER_ROOT, GROUP_ROOT),
+		//DEVFS_HANDLE("uart0", mcu_uart, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		//UARTFIFO_DEVICE("uart1", &uart1_fifo_cfg, &uart1_fifo_state, 0, 0666, USER_ROOT, GROUP_ROOT),
+		//DEVFS_HANDLE("uart1", mcu_uart, 1, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_HANDLE("uart2", mcu_uart, 2, 0, 0666, USER_ROOT, S_IFCHR),
+		//UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0, 0666, USER_ROOT, GROUP_ROOT),
+		DEVFS_HANDLE("usb0", mcu_usb, 0, 0, 0666, USER_ROOT, S_IFCHR),
 
-		//user devices
-		SST25VF_DEVICE("disk0", 2, 0, 0, 16, 20000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
-		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
-		FIFO_DEVICE("stdio-in", &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, GROUP_ROOT),
+		//FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
+		//FIFO_DEVICE("stdio-in", &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//system devices
-		USBFIFO_DEVICE("link-phy-usb", &stratify_link_transport_usb_fifo_cfg, &stratify_link_transport_usb_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
+		//USBFIFO_DEVICE("link-phy-usb", &stratify_link_transport_usb_fifo_cfg, &stratify_link_transport_usb_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
 
-		SYS_DEVICE,
-		DEVICE_TERMINATOR
+		//SYS_DEVICE,
+
+		DEVFS_TERMINATOR
 };
 
 const sysfs_t const sysfs_list[] = {
-		SYSFS_APP("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
-		SYSFS_DEV("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
-		LOCALFS("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
-		SYSFS_ROOT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
+		APPFS_MOUNT("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
+		DEVFS_MOUNT("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
+		LOCALFS_MOUNT("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
+		SYSFS_MOUNT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
 };
 

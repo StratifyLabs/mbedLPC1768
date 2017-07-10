@@ -10,7 +10,7 @@
 
 //#define __STDIO_VCP
 
-#include <iface/stratify_link_transport_usb.h>
+#include <sos/stratify_link_transport_usb.h>
 extern link_transport_driver_t link_transport_usb;
 
 #endif /* LINK_TRANSPORT_USB_H_ */

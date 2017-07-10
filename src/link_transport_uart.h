@@ -18,7 +18,7 @@ limitations under the License.
 #ifndef LINK_TRANSPORT_UART_H_
 #define LINK_TRANSPORT_UART_H_
 
-#include <iface/link_transport.h>
+#include <sos/link/link_transport.h>
 
 
 extern link_transport_driver_t link_transport_usb;

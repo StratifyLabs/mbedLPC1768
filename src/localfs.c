@@ -28,7 +28,7 @@ limitations under the License.
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stratify/sysfs.h>
+#include <sos/fs/sysfs.h>
 #include <mcu/debug.h>
 
 #include "semihost_api.h"

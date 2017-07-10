@@ -22,15 +22,13 @@ limitations under the License.
 #include <stdbool.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include <iface/link.h>
+#include <sos/link.h>
 #include <mcu/mcu.h>
-#include <iface/dev/uart.h>
-#include <iface/dev/fifo.h>
+#include <mcu/uart.h>
+#include <mcu/fifo.h>
 #include <mcu/core.h>
 #include <mcu/debug.h>
-#include <stratify/usb_dev_typedefs.h>
-#include <stratify/usb_dev_defs.h>
-#include <dev/sys.h>
+#include <sos/dev/sys.h>
 
 #include "link_transport_uart.h"
 
@@ -57,11 +55,8 @@ link_transport_phy_t link_transport_uart_open(const char * name, int baudrate){
 		return -1;
 	}
 
-	attr.baudrate = 460800;
-	attr.parity = UART_PARITY_EVEN;
-	attr.pin_assign = 0;
-	attr.start = UART_ATTR_START_BITS_1;
-	attr.stop = UART_ATTR_STOP_BITS_2;
+	attr.freq = 460800;
+	attr.o_flags = UART_FLAG_IS_PARITY_EVEN | UART_FLAG_IS_STOP1;
 	attr.width = 8;
 	if( ioctl(fd, I_UART_SETATTR, &attr) < 0 ){
 		return -1;
