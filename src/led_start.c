@@ -17,7 +17,7 @@ limitations under the License.
 */
 
 #include <unistd.h>
-#include <mcu/core.h>
+#include <mcu/cortexm.h>
 #include <mcu/pio.h>
 #include <mcu/mcu.h>
 

@@ -34,10 +34,10 @@ const bootloader_board_config_t boot_board_config = {
 		.sw_req_loc = 0x10002000,
 		.sw_req_value = 0x55AA55AA,
 		.program_start_addr = 0x40000,
-		.hw_req.port = 0, .hw_req.pin = 1,
+		.hw_req.port = 0, .hw_req.pin = 17,
 		.flags = 0,
 		.link_transport_driver = &link_transport,
-		.id = 2,
+		.id = HARDWARE_ID
 };
 
 

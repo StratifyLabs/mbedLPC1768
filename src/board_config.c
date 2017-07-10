@@ -66,6 +66,7 @@ void board_event_handler(int event, void * args){
 	}
 }
 
+
 #define SCHED_TASK_TOTAL 10
 
 const stratify_board_config_t stratify_board_config = {
@@ -78,13 +79,13 @@ const stratify_board_config_t stratify_board_config = {
 		.stderr_dev = "/dev/stdio-out",
 		.o_sys_flags = SYS_FLAGS_STDIO_FIFO | SYS_FLAGS_NOTIFY,
 		.sys_name = "mbedLPC1768",
-		.sys_version = "1.0",
+		.sys_version = "1.2",
 		.sys_id = "-KZTKpwml73OFt90YdD8",
 		.sys_memory_size = STFY_SYSTEM_MEMORY_SIZE,
 		.start = stratify_default_thread,
-#if defined __USB
-		.start_args = &link_transport_usb,
-#elif defined __UART
+#if defined __UART
+		.start_args = &link_transport_uart,
+#else
 		.start_args = &link_transport_usb,
 #endif
 		.start_stack_size = STRATIFY_DEFAULT_START_STACK_SIZE,
