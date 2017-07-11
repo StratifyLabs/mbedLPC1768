@@ -1,14 +1,26 @@
 /*
- * bootloader_board_config.c
- *
- *  Created on: Apr 21, 2016
- *      Author: tgil
- */
+
+Copyright 2011-2016 Tyler Gilbert
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 
 
 #include <mcu/types.h>
 #include <mcu/core.h>
-#include <iface/dev/bootloader.h>
+#include <sos/dev/bootloader.h>
 
 #include "link_transport.h"
 #include "board_config.h"
@@ -24,7 +36,12 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
-		.usb_pin_assign = 0,
+		.debug_uart_pin_assignment[0] = {0, 2},
+		.debug_uart_pin_assignment[1] = {0, 3},
+		.usb_pin_assignment[0] = {0, 29},
+		.usb_pin_assignment[1] = {0, 30},
+		.usb_pin_assignment[2] = {1, 30},
+		.usb_pin_assignment[3] = {0xff, 0xff},
 		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 		.led.port = 1, .led.pin = 18,
 		.event = 0

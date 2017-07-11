@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+
 #include <stdint.h>
 #include <sys/lock.h>
 #include <fcntl.h>
@@ -49,6 +50,8 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
+		.debug_uart_pin_assignment[0] = {0, 2},
+		.debug_uart_pin_assignment[1] = {0, 3},
 		.usb_pin_assignment[0] = {0, 29},
 		.usb_pin_assignment[1] = {0, 30},
 		.usb_pin_assignment[2] = {0xff, 0xff},
