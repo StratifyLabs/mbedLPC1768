@@ -149,7 +149,7 @@ int localfs_open(const void * cfg, void ** handle, const char * path, int flags,
 		return -1;
 	}
 
-	mcu_debug("Open mode flags 0x%X\n", openmode);
+	mcu_debug_user_printf("Open mode flags 0x%X\n", openmode);
 
 	fd = semihost_open(path, openmode);
 	if ( fd >= 0 ){

@@ -23,7 +23,7 @@ limitations under the License.
 
 //#define __STDIO_VCP
 
-#include <sos/stratify_link_transport_usb.h>
+#include <sos/link/transport_usb.h>
 extern link_transport_driver_t link_transport;
 
 #endif /* LINK_TRANSPORT_USB_H_ */

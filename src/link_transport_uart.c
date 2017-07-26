@@ -23,10 +23,8 @@ limitations under the License.
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <sos/link.h>
-#include <mcu/mcu.h>
-#include <mcu/uart.h>
-#include <mcu/fifo.h>
-#include <mcu/core.h>
+#include <mcu/periph.h>
+#include <device/fifo.h>
 #include <mcu/debug.h>
 #include <sos/dev/sys.h>
 

@@ -9,7 +9,7 @@
     "buildprefix": "build_",
     "description": "The MBED LPC1768 is an mbed board that is compatible with Stratify OS.",
     "github": "https://github.com/StratifyLabs/mbedLPC1768",
-    "hardwareid": "0x00000002",
+    "hardwareid": "0x00000003",
     "name": "mbedLPC1768",
     "permissions": "public",
     "publisher": "Stratify Labs, Inc",

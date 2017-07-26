@@ -17,16 +17,15 @@ limitations under the License.
 */
 
 
-
 #include <mcu/types.h>
 #include <mcu/core.h>
-#include <sos/dev/bootloader.h>
+#include <mcu/bootloader.h>
 
 #include "link_transport.h"
 #include "board_config.h"
 
 //Can't do CRP or the JTAG shuts down on the MBED
-//const u32 _mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
+//const u32 mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
 #define STFY_SYSTEM_CLOCK 72000000
 #define STFY_SYSTEM_OSC 12000000
@@ -36,23 +35,30 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
-		.debug_uart_pin_assignment[0] = {0, 2},
-		.debug_uart_pin_assignment[1] = {0, 3},
-		.usb_pin_assignment[0] = {0, 29},
-		.usb_pin_assignment[1] = {0, 30},
-		.usb_pin_assignment[2] = {1, 30},
-		.usb_pin_assignment[3] = {0xff, 0xff},
+		.debug_uart_port = 0,
+		.debug_uart_attr = {
+				.pin_assignment =
+				{
+						.rx = {0, 2},
+						.tx = {0, 3},
+						.cts = {0xff, 0xff},
+						.rts = {0xff, 0xff}
+				},
+				.freq = 115200,
+				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
+				.width = 8
+		},
 		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 		.led.port = 1, .led.pin = 18,
-		.event = 0
+		.event_handler = 0
 };
 
 const bootloader_board_config_t boot_board_config = {
 		.sw_req_loc = 0x10002000,
 		.sw_req_value = 0x55AA55AA,
 		.program_start_addr = 0x40000,
-		.hw_req.port = 0, .hw_req.pin = 17,
-		.flags = 0,
+		.hw_req.port = 0, .hw_req.pin = 16,
+		.o_flags = BOOT_BOARD_CONFIG_FLAG_HW_REQ_ACTIVE_HIGH | BOOT_BOARD_CONFIG_FLAG_HW_REQ_PULLDOWN,
 		.link_transport_driver = &link_transport,
 		.id = HARDWARE_ID
 };

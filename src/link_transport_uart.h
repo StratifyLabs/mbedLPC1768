@@ -18,10 +18,9 @@ limitations under the License.
 #ifndef LINK_TRANSPORT_UART_H_
 #define LINK_TRANSPORT_UART_H_
 
-#include <sos/link/link_transport.h>
+#include <sos/link/transport.h>
 
-
-extern link_transport_driver_t link_transport_usb;
+extern link_transport_driver_t link_transport_uart;
 
 link_transport_phy_t link_transport_uart_open(const char * name, int);
 int link_transport_uart_read(link_transport_phy_t, void * buf, int nbyte);

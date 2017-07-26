@@ -1,0 +1,7 @@
+*.a
+*.o
+*.d
+*.map
+*.s
+*.bin
+./build_*mbedLPC1768*
