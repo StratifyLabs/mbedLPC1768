@@ -26,6 +26,7 @@ limitations under the License.
 #include <device/uartfifo.h>
 #include <device/usbfifo.h>
 #include <device/fifo.h>
+#include <device/led_pwm.h>
 #include <sos/link.h>
 #include <sos/fs/sysfs.h>
 #include <sos/fs/appfs.h>
@@ -41,8 +42,8 @@ limitations under the License.
 #define SOS_BOARD_SYSTEM_MEMORY_SIZE (8192*2)
 #define SOS_BOARD_TASK_TOTAL 10
 
-
 static void board_event_handler(int event, void * args);
+
 
 const mcu_board_config_t mcu_board_config = {
 		.core_osc_freq = SOS_BOARD_SYSTEM_OSC,
@@ -78,10 +79,8 @@ void board_event_handler(int event, void * args){
 	case MCU_BOARD_CONFIG_EVENT_START_LINK:
 		sos_led_startup();
 		break;
-
 	}
 }
-
 
 const sos_board_config_t sos_board_config = {
 		.clk_usecond_tmr = 3,
@@ -143,6 +142,63 @@ fifo_state_t stdio_in_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0,
 
 #define MEM_DEV 0
 
+
+const led_pwm_config_t led_pwm0_config = {
+		.pwm.attr = {
+				.o_flags = PWM_FLAG_IS_ACTIVE_HIGH,
+				.freq = 1000000,
+				.period = 1000000,
+				.pin_assignment.channel[0] = {1,18},
+				.pin_assignment.channel[1] = {0xff,0xff},
+				.pin_assignment.channel[2] = {0xff,0xff},
+				.pin_assignment.channel[3] = {0xff,0xff}
+		},
+		.loc = 1,
+		.o_flags = LED_PWM_CONFIG_FLAG_IS_ACTIVE_HIGH
+};
+
+const led_pwm_config_t led_pwm1_config = {
+		.pwm.attr = {
+				.o_flags = PWM_FLAG_IS_ACTIVE_HIGH,
+				.freq = 1000000,
+				.period = 1000000,
+				.pin_assignment.channel[0] = {1,20},
+				.pin_assignment.channel[1] = {0xff,0xff},
+				.pin_assignment.channel[2] = {0xff,0xff},
+				.pin_assignment.channel[3] = {0xff,0xff}
+		},
+		.loc = 2,
+		.o_flags = LED_PWM_CONFIG_FLAG_IS_ACTIVE_HIGH
+};
+
+const led_pwm_config_t led_pwm2_config = {
+		.pwm.attr = {
+				.o_flags = PWM_FLAG_IS_ACTIVE_HIGH,
+				.freq = 1000000,
+				.period = 1000000,
+				.pin_assignment.channel[0] = {1,21},
+				.pin_assignment.channel[1] = {0xff,0xff},
+				.pin_assignment.channel[2] = {0xff,0xff},
+				.pin_assignment.channel[3] = {0xff,0xff}
+		},
+		.loc = 3,
+		.o_flags = LED_PWM_CONFIG_FLAG_IS_ACTIVE_HIGH
+};
+
+const led_pwm_config_t led_pwm3_config = {
+		.pwm.attr = {
+				.o_flags = PWM_FLAG_IS_ACTIVE_HIGH,
+				.freq = 1000000,
+				.period = 1000000,
+				.pin_assignment.channel[0] = {1,23},
+				.pin_assignment.channel[1] = {0xff,0xff},
+				.pin_assignment.channel[2] = {0xff,0xff},
+				.pin_assignment.channel[3] = {0xff,0xff}
+		},
+		.loc = 4,
+		.o_flags = LED_PWM_CONFIG_FLAG_IS_ACTIVE_HIGH
+};
+
 /* This is the list of devices that will show up in the /dev folder.
  */
 const devfs_device_t devices[] = {
@@ -180,6 +236,10 @@ const devfs_device_t devices[] = {
 		//UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("usb0", mcu_usb, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 
+		DEVFS_DEVICE("led0", led_pwm, 1, &led_pwm0_config, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("led1", led_pwm, 1, &led_pwm1_config, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("led2", led_pwm, 1, &led_pwm2_config, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("led3", led_pwm, 1, &led_pwm3_config, 0, 0666, USER_ROOT, S_IFCHR),
 
 		//FIFO buffers used for std in and std out
 		DEVFS_DEVICE("stdio-out", fifo, 0, &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, S_IFCHR),

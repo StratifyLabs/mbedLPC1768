@@ -68,7 +68,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.1177717200" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1274993884" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
-								<option id="gnu.c.link.option.ldflags.1196670032" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-Wl,-Map,fw.map,--gc,--defsym=_mcu_core_hardware_id=${HARDWARE_ID} -Ttext=${START_ADDR} -Tldscripts/${DEVICE}-rom.ld -nostdlib -u symbols_table" valueType="string"/>
+								<option id="gnu.c.link.option.ldflags.1196670032" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-Wl,-Map,fw.map,--gc,--defsym=mcu_core_hardware_id=${HARDWARE_ID} -Ttext=${START_ADDR} -Tldscripts/${DEVICE}-rom.ld -nostdlib -u symbols_table" valueType="string"/>
 								<option id="gnu.c.link.option.libs.1677234288" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="sos_sys${BUILD_TYPE}"/>
 									<listOptionValue builtIn="false" value="lwip_kernel"/>
