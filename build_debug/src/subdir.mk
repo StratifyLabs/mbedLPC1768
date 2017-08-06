@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/board_config.c \
+../src/board_trace.c \
 ../src/link_transport_uart.c \
 ../src/link_transport_usb.c \
 ../src/localfs.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/board_config.o \
+./src/board_trace.o \
 ./src/link_transport_uart.o \
 ./src/link_transport_usb.o \
 ./src/localfs.o \
@@ -21,6 +23,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/board_config.d \
+./src/board_trace.d \
 ./src/link_transport_uart.d \
 ./src/link_transport_usb.d \
 ./src/localfs.d \

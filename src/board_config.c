@@ -16,6 +16,7 @@ limitations under the License.
 
 */
 
+
 #include <sys/lock.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -34,6 +35,7 @@ limitations under the License.
 #include <sos/sos.h>
 
 #include "localfs.h"
+#include "board_trace.h"
 #include "link_transport_usb.h"
 #include "link_transport_uart.h"
 
@@ -88,7 +90,7 @@ const sos_board_config_t sos_board_config = {
 		.stdin_dev = "/dev/stdio-in" ,
 		.stdout_dev = "/dev/stdio-out",
 		.stderr_dev = "/dev/stdio-out",
-		.o_sys_flags = SYS_FLAGS_STDIO_FIFO | SYS_FLAGS_NOTIFY,
+		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
 		.sys_name = "mbedLPC1768",
 		.sys_version = "1.3",
 		.sys_id = "-KZTKpwml73OFt90YdD8",
@@ -99,8 +101,12 @@ const sos_board_config_t sos_board_config = {
 #else
 		.start_args = &link_transport_usb,
 #endif
-		.start_stack_size = SOS_DEFAULT_START_STACK_SIZE
+		.start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
+		.request = 0,
+		.trace_dev = "/dev/trace",
+		.trace_event = board_trace_event
 };
+
 
 volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
 task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
@@ -201,9 +207,9 @@ const led_pwm_config_t led_pwm3_config = {
 
 /* This is the list of devices that will show up in the /dev folder.
  */
-const devfs_device_t devices[] = {
+const devfs_device_t devfs_list[] = {
 		//mcu peripherals
-		DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK),
+		DEVFS_DEVICE("trace", ffifo, 0, &trace_config, &trace_state, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
@@ -233,6 +239,7 @@ const devfs_device_t devices[] = {
 		//DEVFS_DEVICE("uart0", mcu_uart, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		//DEVFS_DEVICE("uart1", mcu_uart, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("uart2", mcu_uart, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("uart3", mcu_uart, 3, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		//UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("usb0", mcu_usb, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 
@@ -253,11 +260,12 @@ const devfs_device_t devices[] = {
 		DEVFS_TERMINATOR
 };
 
+const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK);
 
 
 const sysfs_t const sysfs_list[] = {
-		APPFS_MOUNT("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
-		DEVFS_MOUNT("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
+		APPFS_MOUNT("/app", &mem0, SYSFS_ALL_ACCESS), //the folder for ram/flash applications
+		DEVFS_MOUNT("/dev", devfs_list, SYSFS_READONLY_ACCESS), //the list of devices
 		LOCALFS_MOUNT("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
 		SYSFS_MOUNT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
