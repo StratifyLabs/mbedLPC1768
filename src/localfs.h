@@ -70,8 +70,7 @@ int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 		.startup = SYSFS_NOTSUP, \
 		.mkfs = localfs_mkfs, \
 		.open = localfs_open, \
-		.read_async = NULL, \
-		.write_async = NULL, \
+		.aio = SYSFS_NOTSUP, \
 		.read = localfs_read, \
 		.write = localfs_write, \
 		.close = localfs_close, \
@@ -92,7 +91,7 @@ int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 		.chmod = SYSFS_NOTSUP, \
 		.chown = SYSFS_NOTSUP, \
 		.unlock = localfs_unlock, \
-		.cfg = cfgp, \
+		.config = cfgp, \
 }
 
 

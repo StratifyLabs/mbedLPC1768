@@ -16,7 +16,6 @@ limitations under the License.
 
 */
 
-
 #include <sys/lock.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -39,13 +38,12 @@ limitations under the License.
 #include "link_transport_usb.h"
 #include "link_transport_uart.h"
 
-#define SOS_BOARD_SYSTEM_CLOCK 120000000
+#define SOS_BOARD_SYSTEM_CLOCK 96000000
 #define SOS_BOARD_SYSTEM_OSC 12000000
 #define SOS_BOARD_SYSTEM_MEMORY_SIZE (8192*2)
 #define SOS_BOARD_TASK_TOTAL 10
 
 static void board_event_handler(int event, void * args);
-
 
 const mcu_board_config_t mcu_board_config = {
 		.core_osc_freq = SOS_BOARD_SYSTEM_OSC,
@@ -73,7 +71,7 @@ const mcu_board_config_t mcu_board_config = {
 void board_event_handler(int event, void * args){
 	core_attr_t attr;
 	switch(event){
-	case MCU_BOARD_CONFIG_EVENT_PRIV_FATAL:
+	case MCU_BOARD_CONFIG_EVENT_ROOT_FATAL:
 		//start the bootloader on a fatal event
 		attr.o_flags = CORE_FLAG_EXEC_INVOKE_BOOTLOADER;
 		mcu_core_setattr(0, &attr);
@@ -109,7 +107,7 @@ const sos_board_config_t sos_board_config = {
 
 
 volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
-task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
+volatile task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
 
 #define USER_ROOT 0
 
@@ -209,7 +207,7 @@ const led_pwm_config_t led_pwm3_config = {
  */
 const devfs_device_t devfs_list[] = {
 		//mcu peripherals
-		DEVFS_DEVICE("trace", ffifo, 0, &trace_config, &trace_state, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("trace", ffifo, 0, &board_trace_config, &board_trace_state, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),

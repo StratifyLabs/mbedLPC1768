@@ -19,8 +19,6 @@ limitations under the License.
 #ifndef LINK_TRANSPORT_USB_H_
 #define LINK_TRANSPORT_USB_H_
 
-//#define __STDIO_VCP
-
 #include <sos/link/transport_usb.h>
 extern link_transport_driver_t link_transport_usb;
 

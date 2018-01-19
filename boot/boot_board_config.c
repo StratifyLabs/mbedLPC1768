@@ -24,6 +24,10 @@ limitations under the License.
 #include "link_transport.h"
 #include "board_config.h"
 
+const struct __sFILE_fake __sf_fake_stdin;
+const struct __sFILE_fake __sf_fake_stdout;
+const struct __sFILE_fake __sf_fake_stderr;
+
 //Can't do CRP or the JTAG shuts down on the MBED
 //const u32 mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
@@ -57,7 +61,7 @@ const bootloader_board_config_t boot_board_config = {
 		.sw_req_loc = 0x10002000,
 		.sw_req_value = 0x55AA55AA,
 		.program_start_addr = 0x40000,
-		.hw_req.port = 0, .hw_req.pin = 16,
+		.hw_req.port = 0, .hw_req.pin = 16, //p14 on MBED, center joystick on xively application board
 		.o_flags = BOOT_BOARD_CONFIG_FLAG_HW_REQ_ACTIVE_HIGH | BOOT_BOARD_CONFIG_FLAG_HW_REQ_PULLDOWN,
 		.link_transport_driver = &link_transport,
 		.id = HARDWARE_ID

@@ -23,8 +23,8 @@ limitations under the License.
 
 void board_trace_event(void * event);
 
-extern const ffifo_config_t trace_config;
-extern ffifo_state_t trace_state;
+extern const ffifo_config_t board_trace_config;
+extern ffifo_state_t board_trace_state;
 
 
 #endif /* BOARD_TRACE_H_ */

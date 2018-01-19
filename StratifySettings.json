@@ -1,12 +1,17 @@
 {
-    "LocalBuild": "build_debug",
-    "LocalIsFormatHome": false,
-    "LocalIsInstallData": false,
-    "LocalIsRunTests": false,
-    "LocalIsVerify": false,
-    "LocalProjectId": "-KZTKpwml73OFt90YdD8",
     "bootsuffix": "_boot",
     "buildprefix": "build_",
+    "change": "Update to kernel v3.3.2, bootloader fix",
+    "changes": {
+        "-L2TsbieZypHOhTNwbE9": {
+            "description": "Changing to new cloud format",
+            "version": "1.2"
+        },
+        "-L3F0-MJRi9_6jE51UDU": {
+            "description": "Update to kernel v3.3.2, bootloader fix",
+            "version": "1.3"
+        }
+    },
     "description": "The MBED LPC1768 is an mbed board that is compatible with Stratify OS.",
     "github": "https://github.com/StratifyLabs/mbedLPC1768",
     "hardwareid": "0x00000003",
@@ -15,5 +20,6 @@
     "publisher": "Stratify Labs, Inc",
     "tags": "mbed,nxp,lpc,lpc17xx,lpc1769,arm,cortex-m3",
     "type": "StratifyKernel",
-    "version": "1.1"
+    "uid": "QSW7bQHeDqhJEcZ0mxQ5SmEYUSL2",
+    "version": "1.3"
 }
