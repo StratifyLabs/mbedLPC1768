@@ -6,3 +6,4 @@
 *.bin
 ./build_*mbedLPC1768*
 cmake_*
+*.user

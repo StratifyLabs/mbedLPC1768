@@ -64,7 +64,7 @@ const bootloader_board_config_t boot_board_config = {
 		.hw_req.port = 0, .hw_req.pin = 16, //p14 on MBED, center joystick on xively application board
 		.o_flags = BOOT_BOARD_CONFIG_FLAG_HW_REQ_ACTIVE_HIGH | BOOT_BOARD_CONFIG_FLAG_HW_REQ_PULLDOWN,
 		.link_transport_driver = &link_transport,
-		.id = HARDWARE_ID
+		.id = __HARDWARE_ID
 };
 
 
