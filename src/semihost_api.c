@@ -45,101 +45,101 @@
 
 #if DEVICE_LOCALFILESYSTEM
 FILEHANDLE semihost_open(const char* name, int openmode) {
-    uint32_t args[3];
-    args[0] = (uint32_t)name;
-    args[1] = (uint32_t)openmode;
-    args[2] = (uint32_t)strlen(name);
-    return __semihost(SYS_OPEN, args);
+	uint32_t args[3];
+	args[0] = (uint32_t)name;
+	args[1] = (uint32_t)openmode;
+	args[2] = (uint32_t)strlen(name);
+	return __semihost(SYS_OPEN, args);
 }
 
 int semihost_close(FILEHANDLE fh) {
-    return __semihost(SYS_CLOSE, &fh);
+	return __semihost(SYS_CLOSE, &fh);
 }
 
 int semihost_write(FILEHANDLE fh, const unsigned char* buffer, unsigned int length, int mode) {
-    if (length == 0) return 0;
+	if (length == 0) return 0;
 
-    uint32_t args[3];
-    args[0] = (uint32_t)fh;
-    args[1] = (uint32_t)buffer;
-    args[2] = (uint32_t)length;
-    return __semihost(SYS_WRITE, args);
+	uint32_t args[3];
+	args[0] = (uint32_t)fh;
+	args[1] = (uint32_t)buffer;
+	args[2] = (uint32_t)length;
+	return __semihost(SYS_WRITE, args);
 }
 
 int semihost_read(FILEHANDLE fh, unsigned char* buffer, unsigned int length, int mode) {
-    uint32_t args[3];
-    args[0] = (uint32_t)fh;
-    args[1] = (uint32_t)buffer;
-    args[2] = (uint32_t)length;
-    return __semihost(SYS_READ, args);
+	uint32_t args[3];
+	args[0] = (uint32_t)fh;
+	args[1] = (uint32_t)buffer;
+	args[2] = (uint32_t)length;
+	return __semihost(SYS_READ, args);
 }
 
 int semihost_istty(FILEHANDLE fh) {
-    return __semihost(SYS_ISTTY, &fh);
+	return __semihost(SYS_ISTTY, &fh);
 }
 
 int semihost_seek(FILEHANDLE fh, long position) {
-    uint32_t args[2];
-    args[0] = (uint32_t)fh;
-    args[1] = (uint32_t)position;
-    return __semihost(SYS_SEEK, args);
+	uint32_t args[2];
+	args[0] = (uint32_t)fh;
+	args[1] = (uint32_t)position;
+	return __semihost(SYS_SEEK, args);
 }
 
 int semihost_ensure(FILEHANDLE fh) {
-    return __semihost(SYS_ENSURE, &fh);
+	return __semihost(SYS_ENSURE, &fh);
 }
 
 long semihost_flen(FILEHANDLE fh) {
-    return __semihost(SYS_FLEN, &fh);
+	return __semihost(SYS_FLEN, &fh);
 }
 
 int semihost_remove(const char *name) {
-    uint32_t args[2];
-    args[0] = (uint32_t)name;
-    args[1] = (uint32_t)strlen(name);
-    return __semihost(SYS_REMOVE, args);
+	uint32_t args[2];
+	args[0] = (uint32_t)name;
+	args[1] = (uint32_t)strlen(name);
+	return __semihost(SYS_REMOVE, args);
 }
 
 int semihost_rename(const char *old_name, const char *new_name) {
-    uint32_t args[4];
-    args[0] = (uint32_t)old_name;
-    args[1] = (uint32_t)strlen(old_name);
-    args[0] = (uint32_t)new_name;
-    args[1] = (uint32_t)strlen(new_name);
-    return __semihost(SYS_RENAME, args);
+	uint32_t args[4];
+	args[0] = (uint32_t)old_name;
+	args[1] = (uint32_t)strlen(old_name);
+	args[0] = (uint32_t)new_name;
+	args[1] = (uint32_t)strlen(new_name);
+	return __semihost(SYS_RENAME, args);
 }
 #endif
 
 int semihost_exit() {
-    uint32_t args[4];
-    return __semihost(SYS_EXIT, args);
+	uint32_t args[4];
+	return __semihost(SYS_EXIT, args);
 }
 
 int semihost_uid(char *uid) {
-    uint32_t args[2];
-    args[0] = (uint32_t)uid;
-    args[1] = DEVICE_ID_LENGTH + 1;
-    return __semihost(USR_UID, &args);
+	uint32_t args[2];
+	args[0] = (uint32_t)uid;
+	args[1] = DEVICE_ID_LENGTH + 1;
+	return __semihost(USR_UID, &args);
 }
 
 int semihost_reset() {
-    // Does not normally return, however if used with older firmware versions
-    // that do not support this call it will return -1.
-    return __semihost(USR_RESET, NULL);
+	// Does not normally return, however if used with older firmware versions
+	// that do not support this call it will return -1.
+	return __semihost(USR_RESET, NULL);
 }
 
 int semihost_vbus() {
-    return __semihost(USR_VBUS, NULL);
+	return __semihost(USR_VBUS, NULL);
 }
 
 int semihost_powerdown() {
-    return __semihost(USR_POWERDOWN, NULL);
+	return __semihost(USR_POWERDOWN, NULL);
 }
 
 #if DEVICE_DEBUG_AWARENESS
 
 int semihost_connected() {
-    return (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) ? 1 : 0;
+	return (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) ? 1 : 0;
 }
 
 #else
@@ -147,15 +147,15 @@ int semihost_connected() {
 static int is_debugger_attached = 1;
 
 int semihost_connected() {
-    return is_debugger_attached;
+	return is_debugger_attached;
 }
 #endif
 
 int semihost_disabledebug() {
 #if !(DEVICE_DEBUG_AWARENESS)
-    is_debugger_attached = 0;
+	is_debugger_attached = 0;
 #endif
-    return __semihost(USR_DISABLEDEBUG, NULL);
+	return __semihost(USR_DISABLEDEBUG, NULL);
 }
 
 #endif

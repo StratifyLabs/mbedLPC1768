@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,9 +28,9 @@ limitations under the License.
 #define TRACE_BUFFER_SIZE (sizeof(link_trace_event_t)*TRACE_COUNT)
 char trace_buffer[TRACE_FRAME_SIZE*TRACE_COUNT];
 const ffifo_config_t board_trace_config = {
-		.count = TRACE_COUNT,
-		.frame_size = sizeof(link_trace_event_t),
-		.buffer = trace_buffer
+	.frame_count = TRACE_COUNT,
+	.frame_size = sizeof(link_trace_event_t),
+	.buffer = trace_buffer
 };
 ffifo_state_t board_trace_state;
 

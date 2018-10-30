@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,34 +55,34 @@ limitations under the License.
 #define OPEN_A          8
 #define OPEN_INVALID   -1
 int posix_to_semihost_open_flags(int flags) {
-    /* POSIX flags -> semihosting open mode */
-    int openmode;
-    if (flags & O_RDWR) {
-        /* a plus mode */
-        openmode = OPEN_PLUS;
-        if (flags & O_APPEND) {
-            openmode |= OPEN_A;
-        } else if (flags & O_TRUNC) {
-            openmode |= OPEN_W;
-        } else {
-            openmode |= OPEN_R;
-        }
-    } else if (flags & O_WRONLY) {
-        /* write or append */
-        if (flags & O_APPEND) {
-            openmode = OPEN_A;
-        } else {
-            openmode = OPEN_W;
-        }
-    } else if (flags == O_RDONLY) {
-        /* read mode */
-        openmode = OPEN_R;
-    } else {
-        /* invalid flags */
-        openmode = OPEN_INVALID;
-    }
+	/* POSIX flags -> semihosting open mode */
+	int openmode;
+	if (flags & O_RDWR) {
+		/* a plus mode */
+		openmode = OPEN_PLUS;
+		if (flags & O_APPEND) {
+			openmode |= OPEN_A;
+		} else if (flags & O_TRUNC) {
+			openmode |= OPEN_W;
+		} else {
+			openmode |= OPEN_R;
+		}
+	} else if (flags & O_WRONLY) {
+		/* write or append */
+		if (flags & O_APPEND) {
+			openmode = OPEN_A;
+		} else {
+			openmode = OPEN_W;
+		}
+	} else if (flags == O_RDONLY) {
+		/* read mode */
+		openmode = OPEN_R;
+	} else {
+		/* invalid flags */
+		openmode = OPEN_INVALID;
+	}
 
-    return openmode;
+	return openmode;
 }
 
 

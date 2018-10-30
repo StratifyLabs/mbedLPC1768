@@ -31,7 +31,7 @@ extern "C" {
 
 #if defined(__ICCARM__)
 inline int __semihost(int reason, const void *arg) {
-    return __semihosting(reason, (void*)arg);
+	return __semihosting(reason, (void*)arg);
 }
 #else
 
@@ -46,19 +46,19 @@ inline int __semihost(int reason, const void *arg) {
 #endif
 
 static inline int __semihost(int reason, const void *arg) {
-    int value;
+	int value;
 
-    asm volatile (
-       "mov r0, %1"          "\n\t"
-       "mov r1, %2"          "\n\t"
-       AngelSWIInsn " %a3"   "\n\t"
-       "mov %0, r0"
-       : "=r" (value)                                         /* output operands             */
-       : "r" (reason), "r" (arg), "i" (AngelSWI)              /* input operands              */
-       : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc"   /* list of clobbered registers */
-    );
+	asm volatile (
+				"mov r0, %1"          "\n\t"
+				"mov r1, %2"          "\n\t"
+				AngelSWIInsn " %a3"   "\n\t"
+								 "mov %0, r0"
+				: "=r" (value)                                         /* output operands             */
+				: "r" (reason), "r" (arg), "i" (AngelSWI)              /* input operands              */
+				: "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc"   /* list of clobbered registers */
+				);
 
-    return value;
+	return value;
 }
 #endif
 #endif
