@@ -32,6 +32,8 @@ limitations under the License.
 #include <sos/fs/appfs.h>
 #include <sos/fs/devfs.h>
 #include <sos/sos.h>
+#include <sapi/sys/requests.h>
+#include <sapi/sg.h>
 
 #include "localfs.h"
 #include "board_trace.h"
@@ -44,6 +46,13 @@ limitations under the License.
 #define SOS_BOARD_TASK_TOTAL 10
 
 static void board_event_handler(int event, void * args);
+
+const void * kernel_request_api(u32 request){
+	if( request == SAPI_API_REQUEST_SGFX ){
+		return &sg_api;
+	}
+	return 0;
+}
 
 const mcu_board_config_t mcu_board_config = {
 	.core_osc_freq = SOS_BOARD_SYSTEM_OSC,
@@ -94,11 +103,11 @@ const sos_board_config_t sos_board_config = {
 	.sys_id = "-KZTKpwml73OFt90YdD8",
 	.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 	.start = sos_default_thread,
-	#if defined __UART
+#if defined __UART
 	.start_args = &link_transport_uart,
-	#else
+#else
 	.start_args = &link_transport_usb,
-	#endif
+#endif
 	.start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
 	.request = 0,
 	.trace_dev = "/dev/trace",
@@ -110,7 +119,7 @@ const sos_board_config_t sos_board_config = {
 volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
 volatile task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
 
-#define USER_ROOT 0
+#define SOS_USER_ROOT 0
 
 #define UART0_DEVFIFO_BUFFER_SIZE 128
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
@@ -201,65 +210,89 @@ const led_pwm_config_t led_pwm3_config = {
 	.o_flags = LED_PWM_CONFIG_FLAG_IS_ACTIVE_HIGH
 };
 
+SPI_DECLARE_CONFIG(spi0,
+						 SPI_FLAG_SET_MASTER |
+						 SPI_FLAG_IS_FORMAT_SPI |
+						 SPI_FLAG_IS_MODE0,
+						 1000000UL,
+						 8,
+						 0, 17, //P12 - miso
+						 0, 18, //P11 - mosi
+						 0, 15, //P13 - sck
+						 0xff, 0xff //cs not used
+						 );
+
+SPI_DECLARE_CONFIG(spi1,
+						 SPI_FLAG_SET_MASTER |
+						 SPI_FLAG_IS_FORMAT_SPI |
+						 SPI_FLAG_IS_MODE0,
+						 1000000UL,
+						 8,
+						 0, 8, //P6
+						 0, 9, //P5
+						 0, 7, //P7
+						 0xff, 0xff //cs not used
+						 );
+
+
 /* This is the list of devices that will show up in the /dev folder.
  */
 const devfs_device_t devfs_list[] = {
 	//mcu peripherals
-	DEVFS_DEVICE("trace", ffifo, 0, &board_trace_config, &board_trace_state, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("dac0", mcu_dac, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("eint0", mcu_eint, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("eint1", mcu_eint, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("eint2", mcu_eint, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("eint3", mcu_eint, 3, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pio0", mcu_pio, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pio1", mcu_pio, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pio2", mcu_pio, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pio3", mcu_pio, 3, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pio4", mcu_pio, 4, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("i2c0", mcu_i2c, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("i2c1", mcu_i2c, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("i2c2", mcu_i2c, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("pwm1", mcu_pwm, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("qei0", mcu_qei, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("rtc", mcu_rtc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	//DEVFS_DEVICE("spi0", mcu_ssp, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	//DEVFS_DEVICE("spi1", mcu_ssp, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("spi2", mcu_spi, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("tmr0", mcu_tmr, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("tmr1", mcu_tmr, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("tmr2", mcu_tmr, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("uart0", uartfifo, 0, &uart0_fifo_cfg, &uart0_fifo_state, 0666, USER_ROOT, S_IFCHR),
-	//DEVFS_DEVICE("uart0", mcu_uart, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	//DEVFS_DEVICE("uart1", mcu_uart, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("uart2", mcu_uart, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("uart3", mcu_uart, 3, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	//UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("usb0", mcu_usb, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("trace", ffifo, 0, &board_trace_config, &board_trace_state, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("dac0", mcu_dac, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("eint0", mcu_eint, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("eint1", mcu_eint, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("eint2", mcu_eint, 2, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("eint3", mcu_eint, 3, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pio0", mcu_pio, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pio1", mcu_pio, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pio2", mcu_pio, 2, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pio3", mcu_pio, 3, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pio4", mcu_pio, 4, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("i2c0", mcu_i2c, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("i2c1", mcu_i2c, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("i2c2", mcu_i2c, 2, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("pwm1", mcu_pwm, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("qei0", mcu_qei, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("rtc", mcu_rtc, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("spi0", mcu_ssp, 0, &spi0_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("spi1", mcu_ssp, 1, &spi1_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("tmr0", mcu_tmr, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("tmr1", mcu_tmr, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("tmr2", mcu_tmr, 2, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("uart0", uartfifo, 0, &uart0_fifo_cfg, &uart0_fifo_state, 0666, SOS_USER_ROOT, S_IFCHR),
+	//DEVFS_DEVICE("uart0", mcu_uart, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	//DEVFS_DEVICE("uart1", mcu_uart, 1, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("uart2", mcu_uart, 2, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("uart3", mcu_uart, 3, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	//UARTFIFO_DEVICE("uart3", &uart3_fifo_cfg, &uart3_fifo_state, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("usb0", mcu_usb, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
 
-	DEVFS_DEVICE("led0", led_pwm, 1, &led_pwm0_config, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("led1", led_pwm, 1, &led_pwm1_config, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("led2", led_pwm, 1, &led_pwm2_config, 0, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("led3", led_pwm, 1, &led_pwm3_config, 0, 0666, USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("led0", led_pwm, 1, &led_pwm0_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("led1", led_pwm, 1, &led_pwm1_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("led2", led_pwm, 1, &led_pwm2_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("led3", led_pwm, 1, &led_pwm3_config, 0, 0666, SOS_USER_ROOT, S_IFCHR),
 
 	//FIFO buffers used for std in and std out
-	DEVFS_DEVICE("stdio-out", fifo, 0, &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, S_IFCHR),
-	DEVFS_DEVICE("stdio-in", fifo, 0, &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("stdio-out", fifo, 0, &stdio_out_cfg, &stdio_out_state, 0666, SOS_USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("stdio-in", fifo, 0, &stdio_in_cfg, &stdio_in_state, 0666, SOS_USER_ROOT, S_IFCHR),
 
 	//system devices
-	DEVFS_DEVICE("link-phy-usb", usbfifo, 0, &sos_link_transport_usb_fifo_cfg, &sos_link_transport_usb_fifo_state, 0666, USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("link-phy-usb", usbfifo, 0, &sos_link_transport_usb_fifo_cfg, &sos_link_transport_usb_fifo_state, 0666, SOS_USER_ROOT, S_IFCHR),
 
-	DEVFS_DEVICE("sys", sys, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
+	DEVFS_DEVICE("sys", sys, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFCHR),
 
 	DEVFS_TERMINATOR
 };
 
-const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK);
+const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, SOS_USER_ROOT, S_IFBLK);
 
 
-const sysfs_t const sysfs_list[] = {
+const sysfs_t sysfs_list[] = {
 	APPFS_MOUNT("/app", &mem0, SYSFS_ALL_ACCESS), //the folder for ram/flash applications
 	DEVFS_MOUNT("/dev", devfs_list, SYSFS_READONLY_ACCESS), //the list of devices
 	LOCALFS_MOUNT("/home", 0, SYSFS_ALL_ACCESS), //the list of devices

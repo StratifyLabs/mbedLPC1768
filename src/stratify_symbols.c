@@ -20,6 +20,6 @@ limitations under the License.
 
 #define SYMBOLS_IGNORE_COMPLEX 1
 #define SYMBOLS_IGNORE_SON 1
-#define SYMBOLS_IGNORE_SG 1
+//#define SYMBOLS_IGNORE_SG 1
 
 #include <sos/symbols/table.h>
