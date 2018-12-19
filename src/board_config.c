@@ -39,11 +39,12 @@ limitations under the License.
 #include "board_trace.h"
 #include "link_transport_usb.h"
 #include "link_transport_uart.h"
+#include "sl_config.h"
 
 #define SOS_BOARD_SYSTEM_CLOCK 96000000
 #define SOS_BOARD_SYSTEM_OSC 12000000
 #define SOS_BOARD_SYSTEM_MEMORY_SIZE (8192*2)
-#define SOS_BOARD_TASK_TOTAL 10
+#define SOS_BOARD_TASK_TOTAL 6
 
 static void board_event_handler(int event, void * args);
 
@@ -74,7 +75,8 @@ const mcu_board_config_t mcu_board_config = {
 	},
 	.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 	.event_handler = board_event_handler,
-	.led.port = 1, .led.pin = 18
+	.led.port = 1, .led.pin = 18,
+	.o_mcu_debug = MCU_DEBUG_INFO | MCU_DEBUG_SYS
 };
 
 void board_event_handler(int event, void * args){
@@ -98,9 +100,9 @@ const sos_board_config_t sos_board_config = {
 	.stdout_dev = "/dev/stdio-out",
 	.stderr_dev = "/dev/stdio-out",
 	.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
-	.sys_name = "mbedLPC1768",
-	.sys_version = "1.3",
-	.sys_id = "-KZTKpwml73OFt90YdD8",
+	.sys_name = SL_CONFIG_NAME,
+	.sys_version = SL_CONFIG_VERSION_STRING,
+	.sys_id = SL_CONFIG_DOCUMENT_ID,
 	.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 	.start = sos_default_thread,
 #if defined __UART
@@ -116,8 +118,7 @@ const sos_board_config_t sos_board_config = {
 };
 
 
-volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
-volatile task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
+SOS_DECLARE_TASK_TABLE(SOS_BOARD_TASK_TOTAL);
 
 #define SOS_USER_ROOT 0
 

@@ -31,7 +31,7 @@ const struct __sFILE_fake __sf_fake_stderr;
 //Can't do CRP or the JTAG shuts down on the MBED
 //const u32 mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
-#define STFY_SYSTEM_CLOCK 72000000
+#define STFY_SYSTEM_CLOCK 96000000
 #define STFY_SYSTEM_OSC 12000000
 
 const mcu_board_config_t mcu_board_config = {

@@ -42,8 +42,10 @@ static usbd_control_t m_usb_control;
 link_transport_phy_t link_transport_open(const char * name, int baudrate){
 	usb_attr_t usb_attr;
 	link_transport_phy_t fd;
+	MCU_UNUSED_ARGUMENT(baudrate);
 
 	//set up the USB attributes
+	memset(&usb_attr, 0, sizeof(usb_attr));
 	memset(&(usb_attr.pin_assignment), 0xff, sizeof(usb_pin_assignment_t));
 	usb_attr.o_flags = USB_FLAG_SET_DEVICE;
 	usb_attr.pin_assignment.dp.port = 0;
