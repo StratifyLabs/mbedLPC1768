@@ -8,7 +8,7 @@
 
 #define SL_CONFIG_VERSION_STRING "1.4"
 #define SL_CONFIG_VERSION_BCD 0x104
-#define SL_CONFIG_DOCUMENT_ID "<invalid>"
+#define SL_CONFIG_DOCUMENT_ID "f5MKTrxUR1RkYXjWjaFH"
 #define SL_CONFIG_NAME "mbedLPC1768"
 #define SL_CONFIG_TYPE "os"
 #define SL_CONFIG_PUBLISHER "Stratify Labs, Inc"
