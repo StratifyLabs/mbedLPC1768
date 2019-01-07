@@ -48,12 +48,6 @@ limitations under the License.
 
 static void board_event_handler(int event, void * args);
 
-const void * kernel_request_api(u32 request){
-	if( request == SAPI_API_REQUEST_SGFX ){
-		return &sg_api;
-	}
-	return 0;
-}
 
 const mcu_board_config_t mcu_board_config = {
 	.core_osc_freq = SOS_BOARD_SYSTEM_OSC,
@@ -105,11 +99,11 @@ const sos_board_config_t sos_board_config = {
 	.sys_id = SL_CONFIG_DOCUMENT_ID,
 	.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 	.start = sos_default_thread,
-#if defined __UART
+	#if defined __UART
 	.start_args = &link_transport_uart,
-#else
+	#else
 	.start_args = &link_transport_usb,
-#endif
+	#endif
 	.start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
 	.request = 0,
 	.trace_dev = "/dev/trace",
@@ -126,7 +120,23 @@ SOS_DECLARE_TASK_TABLE(SOS_BOARD_TASK_TOTAL);
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
 
 const uartfifo_config_t uart0_fifo_cfg = {
-	.fifo = { .size = UART0_DEVFIFO_BUFFER_SIZE, .buffer = uart0_fifo_buffer }
+	.fifo = { .size = UART0_DEVFIFO_BUFFER_SIZE, .buffer = uart0_fifo_buffer },
+	.uart.attr = {
+		.pin_assignment =
+		{
+			.rx = {0, 2},
+			.tx = {0, 3},
+			.cts = {0xff, 0xff},
+			.rts = {0xff, 0xff}
+		},
+#if defined __UART
+		.freq = 230400,
+#else
+		.freq = 115200,
+#endif
+		.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
+		.width = 8
+	}
 };
 uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
 

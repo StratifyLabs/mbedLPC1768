@@ -53,10 +53,12 @@ link_transport_phy_t link_transport_uart_open(const char * name, int baudrate){
 		return -1;
 	}
 
+	memset(&attr.pin_assignment, 0xff, sizeof(uart_pin_assignment_t));
 	attr.freq = 460800;
-	attr.o_flags = UART_FLAG_IS_PARITY_EVEN | UART_FLAG_IS_STOP1;
+	attr.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1;
 	attr.width = 8;
 	if( ioctl(fd, I_UART_SETATTR, &attr) < 0 ){
+		sos_led_startup();
 		return -1;
 	}
 
