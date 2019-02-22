@@ -22,7 +22,7 @@ limitations under the License.
 
 extern link_transport_driver_t link_transport_uart;
 
-link_transport_phy_t link_transport_uart_open(const char * name, int);
+link_transport_phy_t link_transport_uart_open(const char * name, const void * options);
 int link_transport_uart_read(link_transport_phy_t, void * buf, int nbyte);
 int link_transport_uart_write(link_transport_phy_t, const void * buf, int nbyte);
 int link_transport_uart_close(link_transport_phy_t * handle);

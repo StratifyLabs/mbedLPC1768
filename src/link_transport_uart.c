@@ -44,7 +44,7 @@ link_transport_driver_t link_transport_uart = {
 
 
 
-link_transport_phy_t link_transport_uart_open(const char * name, int baudrate){
+link_transport_phy_t link_transport_uart_open(const char * name, const void * options){
 	link_transport_phy_t fd;
 	uart_attr_t attr;
 
@@ -58,7 +58,6 @@ link_transport_phy_t link_transport_uart_open(const char * name, int baudrate){
 	attr.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1;
 	attr.width = 8;
 	if( ioctl(fd, I_UART_SETATTR, &attr) < 0 ){
-		sos_led_startup();
 		return -1;
 	}
 

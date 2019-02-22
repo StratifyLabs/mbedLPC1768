@@ -24,7 +24,7 @@ limitations under the License.
 #include "link_transport_usb.h"
 
 
-static link_transport_phy_t link_transport_open(const char * name, int baudrate);
+static link_transport_phy_t link_transport_open(const char * name, const void * options);
 
 link_transport_driver_t link_transport_usb = {
 	.handle = -1,
@@ -39,10 +39,10 @@ link_transport_driver_t link_transport_usb = {
 
 static usbd_control_t m_usb_control;
 
-link_transport_phy_t link_transport_open(const char * name, int baudrate){
+link_transport_phy_t link_transport_open(const char * name, const void * options){
 	usb_attr_t usb_attr;
 	link_transport_phy_t fd;
-	MCU_UNUSED_ARGUMENT(baudrate);
+	MCU_UNUSED_ARGUMENT(options);
 
 	//set up the USB attributes
 	memset(&usb_attr, 0, sizeof(usb_attr));
