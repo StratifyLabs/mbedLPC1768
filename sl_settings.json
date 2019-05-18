@@ -7,12 +7,13 @@
    "tags": "mbed,nxp,lpc,lpc17xx,lpc1769,arm,cortex-m3",
    "type": "os",
    "uid": "9cQyOTk3fZXOuMtPyf5j9X4H4b83",
-   "version": "1.5",
-   "timestamp": 1545416717,
+   "version": "1.7",
+   "timestamp": 1558206641,
    "documentId": "f5MKTrxUR1RkYXjWjaFH",
    "buildList": {
       "5AQFNoJGdsibAHPu1QMe": "1.4",
-      "cEADEpmu5USdhN3Lh1HF": "1.5"
+      "cEADEpmu5USdhN3Lh1HF": "1.5",
+      "jhDpmEx2RSi7QEWS9Rri": "1.7"
    },
    "hardwareId": "0x00000003"
 }

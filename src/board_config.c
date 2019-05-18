@@ -70,7 +70,7 @@ const mcu_board_config_t mcu_board_config = {
 	.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
 	.event_handler = board_event_handler,
 	.led.port = 1, .led.pin = 18,
-	.o_mcu_debug = MCU_DEBUG_INFO | MCU_DEBUG_SYS
+	.o_mcu_debug = MCU_DEBUG_INFO | MCU_DEBUG_SYS | MCU_DEBUG_USB | MCU_DEBUG_DEVICE
 };
 
 void board_event_handler(int event, void * args){

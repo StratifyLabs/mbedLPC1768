@@ -16,7 +16,7 @@ project(${SOS_NAME} CXX C)
 #Add sources to the project
 set(SOURCES_PREFIX ${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(src)
-list(APPEND SOS_KERNEL_SOURCELIST ${SOURCES})
+list(APPEND SOS_KERNEL_SOURCELIST ${SOURCES} sl_settings.json)
 
 #Change to boot sources
 set(SOURCES "")
