@@ -304,10 +304,10 @@ const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, SOS_USE
 
 
 const sysfs_t sysfs_list[] = {
-	APPFS_MOUNT("/app", &mem0, SYSFS_ALL_ACCESS), //the folder for ram/flash applications
-	DEVFS_MOUNT("/dev", devfs_list, SYSFS_READONLY_ACCESS), //the list of devices
-	LOCALFS_MOUNT("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
-	SYSFS_MOUNT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
+	APPFS_MOUNT("/app", &mem0, 0777, SYSFS_ROOT), //the folder for ram/flash applications
+	DEVFS_MOUNT("/dev", devfs_list, 0777, SYSFS_ROOT), //the list of devices
+	LOCALFS_MOUNT("/home", 0, 0777, SYSFS_ROOT), //the list of devices
+	SYSFS_MOUNT("/", sysfs_list, 0777, SYSFS_ROOT), //the root filesystem (must be last)
 	SYSFS_TERMINATOR
 };
 

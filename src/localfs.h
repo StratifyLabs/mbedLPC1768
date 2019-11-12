@@ -61,9 +61,10 @@ void localfs_unlock(const void * cfg);
 
 int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 
-#define LOCALFS_MOUNT(mount_loc_name, cfgp, access_mode) { \
+#define LOCALFS_MOUNT(mount_loc_name, cfgp, permissions_value, owner_value) { \
 	.mount_path = mount_loc_name, \
-	.access = access_mode, \
+	.permissions = permissions_value, \
+	.owner = owner_value, \
 	.mount = localfs_init, \
 	.unmount = SYSFS_NOTSUP, \
 	.ismounted = sysfs_always_mounted, \
