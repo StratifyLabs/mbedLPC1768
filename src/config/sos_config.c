@@ -74,9 +74,9 @@ const sos_config_t sos_config = {
               .clean_data_block = cache_clean_data_block,
               .external_sram_policy = SOS_CACHE_DEFAULT_POLICY,
               .sram_policy = SOS_CACHE_DEFAULT_POLICY,
-              .flash_policy= SOS_CACHE_DEFAULT_POLICY,
-              .peripherals_policy= SOS_CACHE_PERIPHERALS_POLICY,
-              .lcd_policy= SOS_CACHE_PERIPHERALS_POLICY},
+              .flash_policy = SOS_CACHE_DEFAULT_POLICY,
+              .peripherals_policy = SOS_CACHE_PERIPHERALS_POLICY,
+              .lcd_policy = SOS_CACHE_PERIPHERALS_POLICY},
 
     .mcu = {.interrupt_request_total = MCU_LAST_IRQ + 1,
             .interrupt_middle_priority = MCU_MIDDLE_IRQ_PRIORITY,
@@ -89,8 +89,7 @@ const sos_config_t sos_config = {
             .memory_size = CONFIG_SYSTEM_MEMORY_SIZE,
             .get_serial_number = sys_get_serial_number,
             .os_mpu_text_mask = 0,
-            .flags =
-                SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
+            .flags = SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
             .name = SL_CONFIG_NAME,
             .version = SL_CONFIG_VERSION_STRING,
             .git_hash = SOS_GIT_HASH,
@@ -124,7 +123,8 @@ const sos_config_t sos_config = {
 #endif
               .disable_led = debug_disable_led,
               .enable_led = debug_enable_led,
-              .flags = 0},
+              .flags = SOS_DEBUG_MESSAGE | SOS_DEBUG_DEVICE | SOS_DEBUG_SYS |
+                       SOS_DEBUG_USER0 | SOS_DEBUG_LINK},
 
 #if _IS_BOOT
     .boot = {.api = {.code_size = (u32)&_etext,
@@ -132,7 +132,7 @@ const sos_config_t sos_config = {
                      .event = boot_event_handler,
                      .hardware_id = __HARDWARE_ID},
              .program_start_address = __KERNEL_START_ADDRESS,
-             .software_bootloader_request_address = 0x20004000,
+             .software_bootloader_request_address = 0x20083000,
              .software_bootloader_request_value = 0x55AA55AA,
              .is_bootloader_requested = boot_is_bootloader_requested,
              .flash_handle = {.port = 0},
@@ -146,6 +146,8 @@ const sos_config_t sos_config = {
     .socket_api = NULL};
 
 // This declares the task tables required by Stratify OS
+#if !_IS_BOOT
 SOS_DECLARE_TASK_TABLE(CONFIG_TASK_TOTAL);
+#endif
 
 

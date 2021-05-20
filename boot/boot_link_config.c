@@ -35,7 +35,6 @@ static usbd_control_t m_usb_control;
 link_transport_phy_t link_transport_open(const char *name,
                                          const void *options) {
   MCU_UNUSED_ARGUMENT(options);
-  dstr("open link transport\n");
   link_transport_phy_t fd;
   usb_attr_t usb_attr = {0};
 

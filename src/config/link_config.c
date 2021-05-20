@@ -24,7 +24,7 @@ const device_fifo_config_t usb_device_fifo_config = {
     .write_location = SOS_LINK_TRANSPORT_USB_BULK_ENDPOINT | 0x80,
     .fifo =
         {
-            .buffer = usb_device_fifo_buffer,
+            .buffer = (char*)usb_device_fifo_buffer,
             .size = USB_DEVICE_FIFO_BUFFER_SIZE,
         },
     .read_buffer = usb_device_fifo_read_buffer,

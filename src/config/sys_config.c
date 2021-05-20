@@ -14,6 +14,7 @@ void sys_initialize() {
   // this is one of the first things called
   // it should initialize the CLOCK/PLL
   // run in ROOT mode before the scheduler is started
+
   mcu_core_initclock(1);
 }
 

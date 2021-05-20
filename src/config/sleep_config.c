@@ -4,9 +4,12 @@
 
 #include "config.h"
 
-void sleep_idle() { __WFI(); }
+void sleep_idle() {
+  __WFI();
+}
 
 void sleep_hibernate(int seconds) {
+  MCU_UNUSED_ARGUMENT(seconds);
   // set deep sleep
   __WFI();
 }
