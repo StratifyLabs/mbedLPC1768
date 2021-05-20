@@ -21,6 +21,9 @@ void boot_event_handler(int event, void *args) {
 }
 
 int boot_is_bootloader_requested() {
+
+  //check for SW boot request
+
   // pin 0,16
   // check if boot request pin is active
   const pio_attr_t attr = {.o_flags = PIO_FLAG_SET_INPUT | PIO_FLAG_IS_PULLDOWN,

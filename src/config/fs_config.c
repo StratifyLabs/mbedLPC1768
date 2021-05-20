@@ -14,7 +14,7 @@
 
 // configure the application filesystem to use the extra flash and RAM
 // available in the system
-#define APPFS_RAM_PAGES 64
+#define APPFS_RAM_PAGES 32
 u32 ram_usage_table[APPFS_RAM_USAGE_WORDS(APPFS_RAM_PAGES)] MCU_SYS_MEM;
 
 const devfs_device_t flash0 =

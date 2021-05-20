@@ -2,6 +2,7 @@
 //Copyright 2021 Stratify Labs, See LICENSE.md for details
 #include <sos/events.h>
 #include <sos/debug.h>
+#include <sos/led.h>
 #include <cortexm/cortexm.h>
 
 
@@ -23,6 +24,7 @@ void os_event_handler(int event, void *args) {
     break;
 
   case SOS_EVENT_START_LINK:
+    sos_led_startup();
     break;
 
   }

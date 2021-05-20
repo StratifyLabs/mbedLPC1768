@@ -132,7 +132,7 @@ const sos_config_t sos_config = {
                      .event = boot_event_handler,
                      .hardware_id = __HARDWARE_ID},
              .program_start_address = __KERNEL_START_ADDRESS,
-             .software_bootloader_request_address = 0x20083000,
+             .software_bootloader_request_address = 0x10000000,
              .software_bootloader_request_value = 0x55AA55AA,
              .is_bootloader_requested = boot_is_bootloader_requested,
              .flash_handle = {.port = 0},
