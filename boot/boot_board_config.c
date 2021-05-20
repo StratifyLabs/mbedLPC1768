@@ -35,26 +35,26 @@ const struct __sFILE_fake __sf_fake_stderr;
 #define STFY_SYSTEM_OSC 12000000
 
 const mcu_board_config_t mcu_board_config = {
-		.core_osc_freq = STFY_SYSTEM_OSC,
-		.core_cpu_freq = STFY_SYSTEM_CLOCK,
-		.core_periph_freq = STFY_SYSTEM_CLOCK,
-		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
-		.debug_uart_port = 0,
-		.debug_uart_attr = {
-				.pin_assignment =
-				{
-						.rx = {0, 2},
-						.tx = {0, 3},
-						.cts = {0xff, 0xff},
-						.rts = {0xff, 0xff}
-				},
-				.freq = 115200,
-				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
-				.width = 8
-		},
-		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
-		.led.port = 1, .led.pin = 18,
-		.event_handler = 0
+    .core_osc_freq = STFY_SYSTEM_OSC,
+    .core_cpu_freq = STFY_SYSTEM_CLOCK,
+    .core_periph_freq = STFY_SYSTEM_CLOCK,
+    .usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
+    .debug_uart_port = 0,
+    .debug_uart_attr = {
+        .pin_assignment =
+            {
+                .rx = {0, 2},
+                .tx = {0, 3},
+                .cts = {0xff, 0xff},
+                .rts = {0xff, 0xff}
+            },
+        .freq = 115200,
+        .o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
+        .width = 8
+    },
+    .o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
+    .led.port = 1, .led.pin = 18,
+    .event_handler = 0
 };
 
 const bootloader_board_config_t boot_board_config = {
