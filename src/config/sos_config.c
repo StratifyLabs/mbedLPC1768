@@ -115,16 +115,19 @@ const sos_config_t sos_config = {
     },
 
     .debug = {.initialize = debug_initialize,
-              .write = debug_write,
+        .write = debug_write,
 #if _IS_BOOT
-              .trace_event = NULL,
+        .trace_event = NULL,
 #else
-              .trace_event = debug_trace_event,
+        .trace_event = debug_trace_event,
 #endif
-              .disable_led = debug_disable_led,
-              .enable_led = debug_enable_led,
-              .flags = SOS_DEBUG_MESSAGE | SOS_DEBUG_DEVICE | SOS_DEBUG_SYS |
-                       SOS_DEBUG_USER0 | SOS_DEBUG_LINK},
+        .disable_led = debug_disable_led,
+        .enable_led = debug_enable_led,
+        .flags = SOS_DEBUG_MESSAGE | SOS_DEBUG_DEVICE | SOS_DEBUG_SYS |
+                 SOS_DEBUG_USER0
+        // | SOS_DEBUG_APPFS
+        //| SOS_DEBUG_LINK
+    },
 
 #if _IS_BOOT
     .boot = {.api = {.code_size = (u32)&_etext,
