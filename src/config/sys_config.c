@@ -14,7 +14,6 @@ void sys_initialize() {
   // this is one of the first things called
   // it should initialize the CLOCK/PLL
   // run in ROOT mode before the scheduler is started
-
   mcu_core_initclock(1);
 }
 
@@ -32,6 +31,7 @@ int sys_kernel_request(int request, void *arg) {
 }
 
 const void *sys_kernel_request_api(u32 request) {
+  MCU_UNUSED_ARGUMENT(request);
   return NULL;
 }
 

@@ -47,7 +47,7 @@ const sos_config_t sos_config = {
               .set_channel = clock_set_channel,
               .get_channel = clock_get_channel,
               .microseconds = clock_microseconds,
-              .nanoseconds = NULL},
+              .nanoseconds = clock_nanoseconds},
 
     .task = {.task_total = CONFIG_TASK_TOTAL,
              .start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
