@@ -49,8 +49,7 @@ const sos_config_t sos_config = {
               .microseconds = clock_microseconds,
               .nanoseconds = clock_nanoseconds},
 
-    .task = {.task_total = CONFIG_TASK_TOTAL,
-             .start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
+    .task = {.start_stack_size = 2048,
              .start = sos_default_thread,
              .start_args = &link_transport},
 
@@ -148,9 +147,5 @@ const sos_config_t sos_config = {
 #endif
     .socket_api = NULL};
 
-// This declares the task tables required by Stratify OS
-#if !_IS_BOOT
-SOS_DECLARE_TASK_TABLE(CONFIG_TASK_TOTAL);
-#endif
 
 

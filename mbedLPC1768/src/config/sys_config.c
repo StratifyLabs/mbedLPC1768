@@ -1,8 +1,6 @@
 // Copyright 2021 Stratify Labs, See LICENSE.md for details
 
-#include <jansson/jansson_api.h>
 #include <mcu/pio.h>
-#include <sgfx/sgfx.h>
 
 extern int mcu_core_initclock(int div);
 extern void mcu_core_getserialno(mcu_sn_t *serial_number);

@@ -1,0 +1,49 @@
+{
+	"folders": [
+		{
+			"path": "dependencies/API"
+		},
+		{
+			"path": "dependencies/ChartAPI"
+		},
+		{
+			"path": "dependencies/CMakeSDK"
+		},
+		{
+			"path": "dependencies/CryptoAPI"
+		},
+		{
+			"path": "dependencies/DspAPI"
+		},
+		{
+			"path": "dependencies/HalAPI"
+		},
+		{
+			"path": "dependencies/InetAPI"
+		},
+		{
+			"path": "dependencies/InstrumentationAPI"
+		},
+		{
+			"path": "dependencies/JsonAPI"
+		},
+		{
+			"path": "dependencies/SosAPI"
+		},
+		{
+			"path": "dependencies/StratifyOS"
+		},
+		{
+			"path": "dependencies/StratifyOS-compiler-rt"
+		},
+		{
+			"path": "dependencies/StratifyOS-mcu-lpc"
+		},
+		{
+			"path": "dependencies/StratifyOS-newlib"
+		},
+		{
+			"path": "dependencies/UxAPI"
+		}
+	]
+}
