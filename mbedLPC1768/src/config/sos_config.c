@@ -1,11 +1,13 @@
 // Copyright and license
 
-//Copyright 2021 Stratify Labs, See LICENSE.md for details
+// Copyright 2021 Stratify Labs, See LICENSE.md for details
 
 #include <sos/config.h>
 #include <sos/dev/sys.h>
 #include <sos/sos.h>
 #include <sos/symbols.h>
+
+#include <cortexm/mpu.h>
 
 #include "cache_config.h"
 #include "clock_config.h"
@@ -75,7 +77,13 @@ const sos_config_t sos_config = {
               .sram_policy = SOS_CACHE_DEFAULT_POLICY,
               .flash_policy = SOS_CACHE_DEFAULT_POLICY,
               .peripherals_policy = SOS_CACHE_PERIPHERALS_POLICY,
-              .lcd_policy = SOS_CACHE_PERIPHERALS_POLICY},
+              .lcd_policy = SOS_CACHE_PERIPHERALS_POLICY,
+              .external_flash_policy = SOS_CACHE_DEFAULT_POLICY,
+              .tightly_coupled_data_policy = SOS_CACHE_DEFAULT_POLICY,
+              .tightly_coupled_instruction_policy = SOS_CACHE_DEFAULT_POLICY,
+              .os_code_mpu_type = MPU_MEMORY_FLASH,
+              .os_data_mpu_type = MPU_MEMORY_SRAM,
+              .os_system_data_mpu_type = MPU_MEMORY_SRAM},
 
     .mcu = {.interrupt_request_total = MCU_LAST_IRQ + 1,
             .interrupt_middle_priority = MCU_MIDDLE_IRQ_PRIORITY,
@@ -146,6 +154,3 @@ const sos_config_t sos_config = {
     .event_handler = os_event_handler,
 #endif
     .socket_api = NULL};
-
-
-

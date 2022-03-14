@@ -34,8 +34,8 @@ set(SOS_DEVICE_FAMILY lpc17xx)
 set(HARDWARE_ID 0x00000003)
 set(KERNEL_START_ADDRESS 0x40000)
 set(BOOT_START_ADDRESS 0x0)
-set(KERNEL_LINKER_FILE ldscripts/lpc1768-rom.ld)
-set(BOOT_LINKER_FILE ldscripts/lpc1768-rom.ld)
+set(KERNEL_LINKER_FILE lpc1768-rom.ld)
+set(BOOT_LINKER_FILE lpc1768-rom.ld)
 
 sos_sdk_bsp_target(RELEASE ${PROJECT_NAME} "" release ${ARCH})
 sos_sdk_bsp_target(DEBUG ${PROJECT_NAME} "" debug ${ARCH})
@@ -64,6 +64,10 @@ set_target_properties(${RELEASE_TARGET}
 	LINK_FLAGS
 	"-u symbols_table -T${KERNEL_LINKER_FILE}"
 	)
+
+target_link_directories(${RELEASE_TARGET}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/ldscripts)
 
 add_executable(${DEBUG_TARGET})
 sos_sdk_copy_target(${RELEASE_TARGET} ${DEBUG_TARGET})
@@ -97,6 +101,10 @@ set_target_properties(${BOOT_RELEASE_TARGET}
 	LINK_FLAGS
 	"-u _main -T${BOOT_LINKER_FILE} "
 	)
+
+target_link_directories(${BOOT_RELEASE_TARGET}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/ldscripts)
 
 
 add_executable(${BOOT_DEBUG_TARGET})
